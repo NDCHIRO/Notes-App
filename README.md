@@ -1,6 +1,6 @@
 # Notes-App
 
-notes app for saving notes and data are saved using sharedPrefernces
+notes app for saving notes and data are saved using sharedPrefernces, notes can be deleted too.
 
 ![Screenshot_1](https://user-images.githubusercontent.com/60838458/148125377-6fd89ec3-a7f4-4070-b28b-0165c1346717.png)
 ![Screenshot_2](https://user-images.githubusercontent.com/60838458/148125382-e0caec88-ab01-4d0e-8626-0603d4c5c318.png)
