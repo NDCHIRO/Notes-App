@@ -3,37 +3,31 @@ package com.example.notesapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.EditText;
 
-import java.io.IOException;
-
 public class NoteActivity extends AppCompatActivity {
     static EditText editView;
-    int i;
+    int noteIndex;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
 
         Intent intent= getIntent();
-        i = intent.getIntExtra("number",1);
+        noteIndex = intent.getIntExtra("number",1);
         editView = findViewById(R.id.editText);
-        editView.setText(MainActivity.wordsList.get(i));
-
+        editView.setText(MainActivity.wordsList.get(noteIndex));
     }
 
     @Override
     public void onBackPressed() {
+        //when back button is pressed the text in the editText is saved in wordList in the noteIndex's position which was sent
+        //from the MainActivity and then notify the adapter to update
         super.onBackPressed();
-        MainActivity.wordsList.set(i,editView.getText().toString());
+        MainActivity.wordsList.set(noteIndex,editView.getText().toString());
         MainActivity.arrayAdapter.notifyDataSetChanged();
-        SharedPreferences sharedPreferences = this.getSharedPreferences("com.example.notesapp",MODE_PRIVATE);
-        try {
-            sharedPreferences.edit().putString("notes",ObjectSerializer.serialize(MainActivity.wordsList)).apply();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        // save data to sharedPreferences
+        MainActivity.saveData();
     }
 }

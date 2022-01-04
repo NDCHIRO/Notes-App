@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     static ArrayList<String> wordsList;
     ListView listView;
-    SharedPreferences sharedPreferences;
+    static SharedPreferences sharedPreferences;
     static ArrayAdapter arrayAdapter;
 
     @Override
@@ -49,6 +49,18 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    static void saveData()
+    {
+        try {
+            //serialize the arrayList so it can be saved
+            sharedPreferences.edit().putString("notes", ObjectSerializer.serialize(MainActivity.wordsList)).apply();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = this.getSharedPreferences("com.example.notesapp",MODE_PRIVATE);
         try {
             wordsList = (ArrayList<String>)ObjectSerializer.deserialize(sharedPreferences.getString("notes",ObjectSerializer.serialize(new ArrayList<String>())));
-            Log.i("info",wordsList.get(0));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -71,22 +82,21 @@ public class MainActivity extends AppCompatActivity {
             {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    //Toast.makeText(getApplicationContext(), "long clicked", Toast.LENGTH_SHORT).show();
                     //there are two i's so we need to save it in another name
                     int deletedNoteIndex = i;
+                    //dialog to check if the user really want to delete or no
                     new AlertDialog.Builder(MainActivity.this).setIcon(android.R.drawable.star_on)
                             .setTitle("delete note")
                             .setMessage("Do you want to delete this note?")
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
+                                    //delete the note, notify the adapter to update
                                     wordsList.remove(deletedNoteIndex);
                                     arrayAdapter.notifyDataSetChanged();
-                                    try {
-                                        sharedPreferences.edit().putString("notes",ObjectSerializer.serialize(MainActivity.wordsList)).apply();
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
+                                    //update data in sharedPreferences to update and save the data
+                                    //if we didn't save that there is note  deleted, the note will not be deleted when you open the app again
+                                    saveData();
                                 }
                             })
                             .setNegativeButton("No",null).show();
