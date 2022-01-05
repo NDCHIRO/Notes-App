@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
     static void saveData()
     {
         try {
@@ -65,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         wordsList = new ArrayList<String>();
         sharedPreferences = this.getSharedPreferences("com.example.notesapp",MODE_PRIVATE);
